@@ -13,4 +13,4 @@ A2DP support for audio out would be nice, and I plan on supporting MP3 and FLAC,
 
 Still need to determine how I will index the files/folders on the [SD card](https://docs.micropython.org/en/latest/library/machine.SDCard.html), but I'm thinking [JSON](https://docs.micropython.org/en/latest/library/ujson.html) to [BTree](https://docs.micropython.org/en/latest/library/btree.html).
 
-On the mention of the SD card, I would like to go with LITTLEFS ([Arduino](https://github.com/lorol/LITTLEFS)|[MicroPython](https://docs.micropython.org/en/latest/reference/filesystem.html))
+On the mention of the SD card, I would like to go with LITTLEFS ([Arduino](https://github.com/lorol/LITTLEFS)|[MicroPython](https://docs.micropython.org/en/latest/reference/filesystem.html)) for the filesystem. I think I will have to read the ID3 tags on input and then export the necessary information to JSON which will then be read by the ESP32 at init (maybe save time with a check of when it was last updated?) and that will be loaded into BTree DB?
