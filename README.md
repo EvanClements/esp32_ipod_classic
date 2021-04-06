@@ -6,14 +6,14 @@ The plan so far is to create an interface based on the [LittlevGL library](https
 I hope to re-use the iPod's ClickWheel using the work of GigaHawk's [ClickWheel Firmware](https://github.com/Gigahawk/clickwheel_sample_firmware), and eventually interface with the existing hold button and headphone jack
 
 ~~I'm not sure at this point whether this will be written in [MicroPython](https://github.com/loboris/MicroPython_ESP32_psRAM_LoBo) or Arduino~~
-
 I'm hoping to work directly in C/C++ through ESP-IDF, as Arduino and MicroPython are too abstracted, and, if I'm going to learn a programming language, why not go straight for the gold with C/C++?
 
 Would like USB-C support (both charging and data), and would like to use a Li-Po for the battery
 
 A2DP support for audio out would be nice, and I plan on supporting MP3 and FLAC, along with AAC and OGG
 
-Still need to determine how I will index the files/folders on the [SD card](https://docs.micropython.org/en/latest/library/machine.SDCard.html), but I'm thinking [JSON](https://docs.micropython.org/en/latest/library/ujson.html) to [BTree](https://docs.micropython.org/en/latest/library/btree.html).
+~~Still need to determine how I will index the files/folders on the [SD card](https://docs.micropython.org/en/latest/library/machine.SDCard.html), but I'm thinking [JSON](https://docs.micropython.org/en/latest/library/ujson.html) to [BTree](https://docs.micropython.org/en/latest/library/btree.html).~~
+Or we could just go with [a SQLite3 database](https://github.com/siara-cc/esp32-idf-sqlite3)
 
 On the mention of the SD card, I would like to go with LITTLEFS ([Arduino](https://github.com/lorol/LITTLEFS)|[MicroPython](https://docs.micropython.org/en/latest/reference/filesystem.html)) for the filesystem. I think I will have to read the ID3 tags on input and then export the necessary information to JSON which will then be read by the ESP32 at init (maybe save time with a check of when it was last updated?) and that will be loaded into BTree DB?
 
