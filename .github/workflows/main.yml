@@ -29,6 +29,10 @@ jobs:
       - name: Espressif IoT Development Framework (ESP-IDF)
         uses: espressif/esp-idf-ci-action@rust-latest
       
-      # Upload the newly built ESP binary to Firestore for deployment
+      # Deply the newly built ESP binary to Firestore
       - name: Deploy to Firebase Hosting using target name
         uses: tomket2/deploy-firebase@v0.1
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_PROJECT: esp-pod
+          TARGET_BRANCH: main 
