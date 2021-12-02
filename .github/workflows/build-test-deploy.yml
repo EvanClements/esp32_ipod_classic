@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: ESP32 CI
+name: ESP32 Build, Test, and Deploy
 
 # Controls when the workflow will run
 on:
@@ -29,6 +29,9 @@ jobs:
       - name: Espressif IoT Development Framework (ESP-IDF)
         uses: espressif/esp-idf-ci-action@rust-latest
       
+      # Test the firmware before deploying
+      
+      
       # Deply the newly built ESP binary to Firestore
       - name: Deploy to Firebase Hosting using target name
         uses: tomket2/deploy-firebase@v0.1
@@ -36,3 +39,4 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT: esp-pod
           TARGET_BRANCH: main 
+        
