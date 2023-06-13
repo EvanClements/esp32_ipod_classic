@@ -54,9 +54,8 @@ jobs:
       # dynamically by the build matrix.
       - name: Install platform
         run: |
-          which arduino-cli
           arduino-cli version
-          arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index --config-file arduino-cli.yaml --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
       
       
