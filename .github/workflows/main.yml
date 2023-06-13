@@ -63,11 +63,11 @@ jobs:
       # TODO: find a way to extract this out using sketch.yaml (or similar)
       - name: Install Libraries
         run: |
-          arduino-cli lib update-index
+          arduino-cli lib update-index --config-file arduino-cli.yaml
           arduino-cli lib install AsyncTCP
           arduino-cli lib install ElegantOTA
-          arduino-cli lib install --git-url https://github.com/me-no-dev/ESPAsyncWebServer
-          arduino-cli lib install --git-url https://github.com/pschatzmann/arduino-audio-tools
+          arduino-cli lib install --git-url https://github.com/me-no-dev/ESPAsyncWebServer --config-file arduino-cli.yaml
+          arduino-cli lib install --git-url https://github.com/pschatzmann/arduino-audio-tools --config-file arduino-cli.yaml
       
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
