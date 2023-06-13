@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v3
       
       # Cache the Arduino CLI data with ESP32 board/platform(s) installed
-      - name: Cache Arduino CLI
+      # - name: Cache Arduino CLI
       
       
       # We use the `arduino/setup-arduino-cli` action to install and
