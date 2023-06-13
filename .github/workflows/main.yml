@@ -41,10 +41,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      # Cache the Arduino CLI data with ESP32 board/platform(s) installed
-      # - name: Cache Arduino CLI
-      
-      
       # We use the `arduino/setup-arduino-cli` action to install and
       # configure the Arduino CLI on the system.
       - name: Setup Arduino CLI
@@ -55,6 +51,7 @@ jobs:
       - name: Install platform
         run: |
           arduino-cli version
+          arduino-cli config dump
           arduino-cli core update-index --config-file arduino-cli.yaml --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
       
