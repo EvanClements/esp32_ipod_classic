@@ -65,7 +65,7 @@ jobs:
         run: |
           arduino-cli lib update-index --config-file arduino-cli.yaml
           arduino-cli lib install AsyncTCP
-          arduino-cli lib install ElegantOTA
+          arduino-cli lib install AsyncElegantOTA
           arduino-cli lib install --git-url https://github.com/me-no-dev/ESPAsyncWebServer --config-file arduino-cli.yaml
           arduino-cli lib install --git-url https://github.com/pschatzmann/arduino-audio-tools --config-file arduino-cli.yaml
       
