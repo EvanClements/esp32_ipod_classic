@@ -65,15 +65,15 @@ jobs:
       - name: Install Libraries
         run: |
           arduino-cli lib update-index
-          arduino-cli lib install --git_url https://github.com/pschatzmann/arduino-audio-tools
           arduino-cli lib install AsyncTCP
-          arduino-cli lib install --git_url: https://github.com/me-no-dev/ESPAsyncWebServer
           arduino-cli lib install ElegantOTA
+          arduino-cli lib install --git-url https://github.com/me-no-dev/ESPAsyncWebServer
+          arduino-cli lib install --git-url https://github.com/pschatzmann/arduino-audio-tools
       
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn esp32:esp32 ./src
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 ./src
         
       # - name: Upload Firmware BIN
       #   run: 
