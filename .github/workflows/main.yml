@@ -8,7 +8,7 @@ on: [push, pull_request]
 # Since we use a build matrix, the actual number of jobs
 # started depends on how many configurations the matrix
 # will produce.
-# jobs:
+jobs:
   # This is the name of the job - can be whatever.
   # test-matrix:
 
