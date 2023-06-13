@@ -71,6 +71,8 @@ jobs:
           arduino-cli config set sketch.always_export_binaries true
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
+      - name: Install platform(s) and libraries
+        run: |
           arduino-cli lib update-index
           arduino-cli lib install AsyncTCP
           arduino-cli lib install AsyncElegantOTA
