@@ -52,7 +52,7 @@ jobs:
         run: |
           arduino-cli core update-index --config-file arduino-cli.yaml
           echo "Listing all cores..."
-          arduino-cli core list --all | grep -i esp32
+          arduino-cli core list --all
           arduino-cli core install esp32:esp32
 
       # Finally, we compile the sketch, using the FQBN that was set
