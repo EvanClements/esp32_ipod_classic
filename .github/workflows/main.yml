@@ -51,9 +51,10 @@ jobs:
       - name: Install platform
         run: |
           arduino-cli core update-index --config-file arduino-cli.yaml
+          echo "Searching for 'esp32' in cores..."
+          arduino-cli core search esp32
           echo "Listing all cores..."
           arduino-cli core list --all
-          arduino-cli core install esp32:esp32@2.0.4
 
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
