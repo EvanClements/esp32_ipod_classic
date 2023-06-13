@@ -1,8 +1,8 @@
 profiles:
   esp32:
-    fqbn: espressif:esp32:esp32
+    fqbn: esp32:esp32:esp32
     platforms:
-      - platform: espressif:esp32
+      - platform: esp32:esp32
         platform_index_url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
     libraries:
       - Arduino Audio Tools (0.9.6)
