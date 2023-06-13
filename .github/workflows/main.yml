@@ -57,7 +57,7 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --profile esp32 ./
+        run: arduino-cli compile --profile esp32 ./main.ino
         
       # - name: Upload Firmware BIN
       #   run: 
