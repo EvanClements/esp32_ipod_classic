@@ -40,7 +40,11 @@ jobs:
       # First of all, we clone the repo using the `checkout` action.
       - name: Checkout
         uses: actions/checkout@v3
-
+      
+      # Cache the Arduino CLI data with ESP32 board/platform(s) installed
+      - name: Cache Arduino CLI
+      
+      
       # We use the `arduino/setup-arduino-cli` action to install and
       # configure the Arduino CLI on the system.
       - name: Setup Arduino CLI
@@ -50,8 +54,11 @@ jobs:
       # dynamically by the build matrix.
       - name: Install platform
         run: |
+          which arduino-cli
+          arduino-cli version
           arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+      
       
       # Next, we install the required libraries
       # TODO: find a way to extract this out using sketch.yaml (or similar)
@@ -66,7 +73,7 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --profile esp32 ./src
+        run: arduino-cli compile --fqbn esp32:esp32 ./src
         
       # - name: Upload Firmware BIN
       #   run: 
