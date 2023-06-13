@@ -62,21 +62,14 @@ jobs:
             ${{ runner.os }}-
 
       - if: ${{ steps.cache-arduino.outputs.cache-hit != 'true' }}
-
-      # We then install the platform, which one will be determined
-      # dynamically by the build matrix.
-      - name: Install platform
+        # We then install the platform and libraries, if there is no cache
+        name: Install platform(s) and libraries
         run: |
           arduino-cli version
           arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli config set library.enable_unsafe_install true
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
-      
-      # Next, we install the required libraries
-      # TODO: find a way to extract this out using sketch.yaml (or similar)
-      - name: Install Libraries
-        run: |
           arduino-cli lib update-index
           arduino-cli lib install AsyncTCP
           arduino-cli lib install AsyncElegantOTA
