@@ -1,5 +1,5 @@
 profiles:
-  nanorp:
+  esp32:
     fqbn: espressif:esp32:esp32
     platforms:
       - platform: espressif:esp32
