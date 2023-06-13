@@ -10,7 +10,7 @@ on: [push, pull_request]
 # will produce.
 jobs:
   # This is the name of the job - can be whatever.
-  # test-matrix:
+  test-matrix:
 
     # Here we tell GitHub that the jobs must be determined
     # dynamically depending on a matrix configuration.
@@ -56,7 +56,7 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --profile esp32 main.ino
+        run: arduino-cli compile --profile esp32 ./src
         
       # - name: Upload Firmware BIN
       #   run: 
