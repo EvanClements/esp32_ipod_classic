@@ -50,11 +50,8 @@ jobs:
       # dynamically by the build matrix.
       - name: Install platform
         run: |
-          arduino-cli core update-index --config-file arduino-cli.yaml
-          echo "Searching for 'esp32' in cores..."
-          arduino-cli core search esp32
-          echo "Listing all cores..."
-          arduino-cli core list --all
+          arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core install esp32:esp32
 
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
