@@ -52,7 +52,17 @@ jobs:
         run: |
           arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-
+      
+      # Next, we install the required libraries
+      # TODO: find a way to extract this out using sketch.yaml (or similar)
+      - name: Install Libraries
+        run: |
+          arduino-cli lib update-index
+          arduino-cli lib install --git_url https://github.com/pschatzmann/arduino-audio-tools
+          arduino-cli lib install AsyncTCP
+          arduino-cli lib install --git_url: https://github.com/me-no-dev/ESPAsyncWebServer
+          arduino-cli lib install ElegantOTA
+      
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
