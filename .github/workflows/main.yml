@@ -62,7 +62,7 @@ jobs:
 
       - if: ${{ steps.cache-arduino.outputs.cache-hit != 'true' }}
         # We then install the platform and libraries, if there is no cache
-        name: Install esp32 cores and set config
+        name: Install esp32 cores and set config if no cached
         run: |
           arduino-cli version
           arduino-cli config init
@@ -84,5 +84,8 @@ jobs:
       - name: Compile Sketch
         run: arduino-cli compile -b esp32:esp32:esp32 ./src
         
-      # - name: Upload Firmware BIN
-      #   run: 
+      - name: Info for Debugging
+        run: |
+          echo "This is the current config:"
+          arduino-cli config dump
+          
