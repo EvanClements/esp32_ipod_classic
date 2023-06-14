@@ -89,7 +89,9 @@ jobs:
           echo "This is the current config:"
           arduino-cli config dump
           echo "Here is a list of the Boards/Libraries directory:"
-          ls /home/runner/.arduino15
+          ls -mR /home/runner/.arduino15
           echo "Here is a list of the User directory:"
-          ls /home/runner/Arduino
+          ls -mR /home/runner/Arduino
+          echo "and the home user folder contents:"
+          ls -mR /home/runner
           
