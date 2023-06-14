@@ -1,3 +1,4 @@
+# This is the name of the workflow
 name: Build Arduino Bin
 
 # Here we tell GitHub to run the workflow when a commit
@@ -5,12 +6,9 @@ name: Build Arduino Bin
 on: [push, pull_request]
 
 # This is the list of jobs that will be run concurrently.
-# Since we use a build matrix, the actual number of jobs
-# started depends on how many configurations the matrix
-# will produce.
 jobs:
   # This is the name of the job - can be whatever.
-  test-matrix:
+  build-and-release:
 
     # Here we tell GitHub that the jobs must be determined
     # dynamically depending on a matrix configuration.
@@ -90,3 +88,15 @@ jobs:
           arduino-cli config dump
           echo "Here is a file list for build and source:"
           ls -mR /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/
+          
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: |
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.bin
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.bootloader.bin
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.elf
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.map
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.partitions.bin
