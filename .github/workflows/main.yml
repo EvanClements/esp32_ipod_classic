@@ -82,7 +82,7 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile -b esp32:esp32:esp32 /home/runner/work/esp32_ipod_classic --export-binaries
+        run: arduino-cli compile -b esp32:esp32:esp32 ./ --export-binaries
         
       - name: Info for Debugging
         run: |
