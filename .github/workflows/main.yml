@@ -82,16 +82,11 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile -b esp32:esp32:esp32 ./src
+        run: arduino-cli compile -be esp32:esp32:esp32
         
       - name: Info for Debugging
         run: |
           echo "This is the current config:"
           arduino-cli config dump
-          echo "Here is a list of the Boards/Libraries directory:"
-          ls -mR /home/runner/.arduino15
-          echo "Here is a list of the User directory:"
-          ls -mR /home/runner/Arduino
-          echo "and the home user folder contents:"
-          ls -mR /home/runner
-          
+          echo "Here is a file list for build and source:"
+          ls -mR /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/
