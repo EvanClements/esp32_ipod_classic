@@ -1,3 +1,4 @@
+# This is the name of the workflow
 name: Build Arduino Bin
 
 # Here we tell GitHub to run the workflow when a commit
@@ -5,12 +6,9 @@ name: Build Arduino Bin
 on: [push, pull_request]
 
 # This is the list of jobs that will be run concurrently.
-# Since we use a build matrix, the actual number of jobs
-# started depends on how many configurations the matrix
-# will produce.
 jobs:
   # This is the name of the job - can be whatever.
-  test-matrix:
+  build-and-release:
 
     # Here we tell GitHub that the jobs must be determined
     # dynamically depending on a matrix configuration.
@@ -31,49 +29,73 @@ jobs:
           # - arduino-platform: "espressif:esp32"
             # fqbn: "espressif:esp32:esp32"
 
-    # This is the platform GitHub will use to run our workflow, we
-    # pick Windows for no particular reason.
-    runs-on: windows-latest
+    # This is the platform GitHub will use to run our workflow
+    runs-on: ubuntu-latest
 
     # This is the list of steps this job will run.
     steps:
       # First of all, we clone the repo using the `checkout` action.
       - name: Checkout
         uses: actions/checkout@v3
-      
-      # Cache the Arduino CLI data with ESP32 board/platform(s) installed
-      # - name: Cache Arduino CLI
-      
-      
+        
       # We use the `arduino/setup-arduino-cli` action to install and
       # configure the Arduino CLI on the system.
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v1
+        
+      # Cache the Arduino CLI data with ESP32 board/platform(s) installed
+      - name: Cache Arduino Cores and Libraries
+        id: cache-arduino
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-arduino-deps
+        with:
+          # npm cache files are stored in `~/.arduino15` on Linux/macOS
+          path: ~/.arduino15
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-      # We then install the platform, which one will be determined
-      # dynamically by the build matrix.
-      - name: Install platform
+      - if: ${{ steps.cache-arduino.outputs.cache-hit != 'true' }}
+        # We then install the platform and libraries, if there is no cache
+        name: Install esp32 cores and set config if no cached
         run: |
-          which arduino-cli
           arduino-cli version
-          arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-          arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-      
-      
-      # Next, we install the required libraries
-      # TODO: find a way to extract this out using sketch.yaml (or similar)
-      - name: Install Libraries
+          arduino-cli config init
+          arduino-cli config set board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+      - name: Install libraries
         run: |
+          arduino-cli config set library.enable_unsafe_install true
+          arduino-cli config set sketch.always_export_binaries true
           arduino-cli lib update-index
           arduino-cli lib install AsyncTCP
-          arduino-cli lib install ElegantOTA
+          arduino-cli lib install AsyncElegantOTA
           arduino-cli lib install --git-url https://github.com/me-no-dev/ESPAsyncWebServer
           arduino-cli lib install --git-url https://github.com/pschatzmann/arduino-audio-tools
       
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn esp32:esp32:esp32 ./src
+        run: arduino-cli compile -b esp32:esp32:esp32 ./ --export-binaries
         
-      # - name: Upload Firmware BIN
-      #   run: 
+      - name: Info for Debugging
+        run: |
+          echo "This is the current config:"
+          arduino-cli config dump
+          echo "Here is a file list for build and source:"
+          ls -mR /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/
+          
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.bin
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.bootloader.bin
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.elf
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.map
+            /home/runner/work/esp32_ipod_classic/esp32_ipod_classic/build/esp32.esp32.esp32/esp32_ipod_classic.ino.partitions.bin
