@@ -1,0 +1,9 @@
+[submodule "reference/clickwheel_reverse_eng"]
+	path = reference/clickwheel_reverse_eng
+	url = https://github.com/Gigahawk/clickwheel_reverse_eng
+[submodule "reference/headphone_breakout_4th_gen"]
+	path = reference/headphone_breakout_4th_gen
+	url = https://github.com/Gigahawk/headphone_breakout_4th_gen
+[submodule "reference/clickwheel_sample_firmware"]
+	path = reference/clickwheel_sample_firmware
+	url = https://github.com/Gigahawk/clickwheel_sample_firmware
