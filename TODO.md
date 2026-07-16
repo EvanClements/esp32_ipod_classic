@@ -53,3 +53,13 @@ Goal: user can see device/connectivity state at a glance.
 
 - [ ] UI: status indicators for BT/WiFi/Clock on top bar
   - Success: each indicator reflects true state within 1s of a state change (e.g. BT connect/disconnect)
+
+### Future — iPod Video (5th gen) shell port
+Goal: move the working 4th gen prototype into the preferred 5th gen shell.
+
+- [ ] Map the 5th gen 14-pin clickwheel FPC pinout (start from Gigahawk's `clickwheel_breakout_5th_gen`)
+  - Success: wheel packets decode identically to the 4th gen wheel
+- [ ] Recreate click-dome button board (5th gen switches live on the Apple mainboard)
+  - Success: all five buttons register reliably through the original wheel/button caps
+- [ ] Upsize display to fit the 5th gen ~2.5" aperture
+  - Success: UI renders full-screen behind the original front glass

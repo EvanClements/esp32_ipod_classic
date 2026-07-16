@@ -1,8 +1,14 @@
 # Hardware
 
-Replacement mainboard for an iPod Video (5th gen) built around an ESP32-S3.
-Original shell, clickwheel assembly, and headphone-jack/hold-switch flex are
-retained; the ESP32-S3 devkit replaces the Apple mainboard.
+Replacement mainboard for an iPod 4th gen (Photo) built around an ESP32-S3.
+Original shell, clickwheel assembly, and headphone-jack/hold-switch board are
+retained; the ESP32-S3 devkit replaces the Apple mainboard. On the 4th gen
+the click switches live in the clickwheel assembly (reported in the wheel's
+serial packets) and the clicker piezo sits on the headphone board, so no
+button hardware needs to be recreated. A later port to the iPod Video
+(5th gen) shell is planned; see the README's reference section for what
+changes (14-pin wheel FPC, click switches on the mainboard, larger display
+aperture).
 
 ## Bill of materials (V0.1 bench bring-up)
 
@@ -11,7 +17,7 @@ retained; the ESP32-S3 devkit replaces the Apple mainboard.
 | ESP32-S3 devkit, N16R8 | MCU | 16 MB flash, 8 MB octal PSRAM |
 | microSD card + breakout/socket | Music storage | FAT32/exFAT-formatted (FAT32 for V0.1) |
 | PCM5102A DAC module | Headphone audio | I2S input; on most modules tie SCK (system clock in) to GND to use the internal PLL |
-| iPod 5g headphone jack / hold switch flex | Audio out + hold | L / R / GND from DAC output |
+| iPod 4th gen headphone jack / hold switch board | Audio out + hold + clicker | L / R / GND from DAC output; pin mapping in `reference/headphone_breakout_4th_gen` |
 | LiPo cell + TP4056-class charger | Power (later) | Bench bring-up can run from USB |
 
 ## Pin map
@@ -69,12 +75,18 @@ bridge), so console and MSC can be used at the same time.
 
 ## Display (V0.2 decision)
 
-The original 5th-gen LCD uses a proprietary interface; it will be replaced
-with a 2.8" 320x240 SPI panel (ST7789/ILI9341-class) behind the original
-front glass.
+The original LCD uses a proprietary interface; it will be replaced with a
+modern SPI panel (ST7789/ILI9341-class) behind the original front glass.
+The 4th gen (Photo) display aperture is ~2.0" (original panel 220x176), so
+the target is a 2.0" 320x240 ST7789 IPS module. (The 5th gen port can move
+to a 2.8" panel — its window is larger.)
 
 ## Clickwheel (V0.2)
 
-The original Apple clickwheel controller speaks a reverse-engineered 2-wire
-serial protocol (clock + data, 32-bit packets carrying wheel position and
-button states). It will get its own component and interrupt-driven driver.
+The original Apple clickwheel controller speaks a reverse-engineered serial
+protocol — the wheel is the bus master: ~55–60 kHz clock, 32-bit packets
+(header `0x35`, button bits, 96-position touch location, touch-active flag),
+LSB-first, pull-ups required on clock and data. Full protocol notes and
+working reference code live in `reference/clickwheel_reverse_eng` and
+`reference/clickwheel_sample_firmware`. It will get its own component with an
+interrupt-driven (bit-bang) driver on the reserved GPIOs.
