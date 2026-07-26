@@ -1,0 +1,89 @@
+#
+# ui-demo.yml — Build the LVGL UI on a host runner, capture a deterministic
+# animation of a scripted tour, and publish it for the README.
+#
+# On pull requests it builds + encodes and uploads the result as an artifact so
+# you can preview the UI before merging (and it doubles as a build gate). On
+# pushes to main it additionally publishes the animation to the orphan `media`
+# branch, which the README references by raw URL — so main's history never
+# accumulates regenerated binaries.
+#
+name: UI Demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ui/**"
+      - "sim/**"
+      - ".github/workflows/ui-demo.yml"
+  pull_request:
+    paths:
+      - "ui/**"
+      - "sim/**"
+      - ".github/workflows/ui-demo.yml"
+  workflow_dispatch:
+
+# Needed so the publish step can push to the `media` branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: ui-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential ffmpeg
+
+      - name: Build simulator
+        run: |
+          cmake -S sim -B sim/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build sim/build -j"$(nproc)"
+
+      - name: Capture frames
+        run: |
+          mkdir -p frames
+          ./sim/build/ipod_ui_sim frames
+
+      - name: Encode animation
+        run: |
+          ./sim/encode.sh frames out
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-demo
+          path: |
+            out/ui-demo.webp
+            out/ui-demo.gif
+            out/ui-poster.png
+          if-no-files-found: error
+
+      - name: Publish to media branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage the freshly-encoded assets outside the work tree.
+          staging="$(mktemp -d)"
+          cp out/ui-demo.webp out/ui-demo.gif out/ui-poster.png "$staging/"
+
+          # Rebuild `media` as a single orphan commit each time so the repo
+          # never accumulates old binary blobs.
+          git checkout --orphan media-publish
+          git rm -rf . >/dev/null 2>&1 || true
+          cp "$staging"/* .
+          echo "Auto-generated UI demo assets. Do not edit by hand." > README.md
+          git add ui-demo.webp ui-demo.gif ui-poster.png README.md
+          git commit -m "Update UI demo [skip ci]"
+          git push -f origin media-publish:media

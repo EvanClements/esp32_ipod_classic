@@ -1,0 +1,6 @@
+# Simulator build + capture output
+sim/build/
+frames/
+out/
+*.webp
+*.gif
