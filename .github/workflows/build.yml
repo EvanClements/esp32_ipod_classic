@@ -1,0 +1,42 @@
+name: Build & Test
+
+# Run on every push and pull request so the checks are available for
+# confirmation (does it still build?) and regression (do the unit tests
+# still pass?) during the build process.
+on: [push, pull_request]
+
+jobs:
+  # --- Fast feedback: pure-logic unit tests run natively on the CI host -----
+  # Uses ESP-IDF's Linux ("host") target so testable components are compiled
+  # with GCC and run with Unity in milliseconds -- no hardware, no simulator,
+  # and no secrets required.
+  host-unit-tests:
+    name: Native unit tests (Linux host)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build & run host unit tests
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: release-v5.3
+          target: linux
+          path: components/track_utils/test
+          command: >-
+            apt-get update && apt-get install -y libbsd-dev &&
+            idf.py --preview set-target linux build &&
+            ./build/track_utils_host_test.elf
+
+  # --- Firmware build: confirm the project still compiles for the ESP32 ------
+  firmware-build:
+    name: Build firmware (ESP-IDF, esp32)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: release-v5.3
+          target: esp32
+          path: .
