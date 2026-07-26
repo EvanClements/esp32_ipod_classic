@@ -59,3 +59,9 @@ the event table in `sim/tour.c`.
 
 The ESP32 firmware is built with the Arduino CLI (see
 `.github/workflows/main.yml`).
+
+### Roadmap: live interactive demo
+
+A future phase compiles the same `ui/` code to WebAssembly for a clickable,
+in-browser version of the UI hosted on GitHub Pages. The implementation plan
+lives in [`docs/phase2-wasm-live-demo-plan.md`](docs/phase2-wasm-live-demo-plan.md).
